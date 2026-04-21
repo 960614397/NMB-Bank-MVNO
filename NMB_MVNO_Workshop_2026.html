@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NMB Bank · MVNO Workshop 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0b1220;
+    --navy2: #111827;
+    --navy3: #1a2540;
+    --gold: #c8963e;
+    --gold2: #e8b458;
+    --gold-light: #f5d08a;
+    --white: #ffffff;
+    --off-white: #f0efe8;
+    --muted: #8a95a8;
+    --border: rgba(200,150,62,0.18);
+    --card: rgba(255,255,255,0.04);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--navy);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.65;
+    overflow-x: hidden;
+  }
+
+  /* ── LOCKSCREEN ── */
+  #lockscreen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: var(--navy);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 0;
+  }
+  #lockscreen .lock-logo {
+    margin-bottom: 2rem;
+    width: 140px;
+  }
+  #lockscreen .lock-box {
+    background: var(--navy3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem 2.5rem;
+    width: 100%;
+    max-width: 440px;
+    text-align: center;
+    box-shadow: 0 32px 80px rgba(0,0,0,0.5);
+  }
+  #lockscreen .lock-icon {
+    width: 60px; height: 60px;
+    background: rgba(200,150,62,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 1.4rem;
+  }
+  #lockscreen h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.6rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+  }
+  #lockscreen p {
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+  #lockscreen input {
+    width: 100%;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(200,150,62,0.25);
+    color: var(--white);
+    border-radius: 10px;
+    padding: 0.9rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    margin-bottom: 0.9rem;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  #lockscreen input::placeholder { color: var(--muted); }
+  #lockscreen input:focus { border-color: var(--gold); }
+  #lockscreen button {
+    width: 100%;
+    background: var(--gold);
+    color: #0b1220;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border: none;
+    border-radius: 10px;
+    padding: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 0.4rem;
+    letter-spacing: 0.02em;
+  }
+  #lockscreen button:hover { background: var(--gold2); }
+  #lockscreen button:active { transform: scale(0.98); }
+  #lockError {
+    display: none;
+    color: #f87171;
+    font-size: 0.83rem;
+    margin-top: 0.8rem;
+    background: rgba(248,113,113,0.08);
+    border-radius: 8px;
+    padding: 0.5rem 0.8rem;
+  }
+  .lock-footer {
+    margin-top: 1.8rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    display: flex; align-items: center; gap: 0.5rem; justify-content: center;
+  }
+  .lock-footer span { color: var(--gold); }
+
+  /* ── NAV ── */
+  #mainnav {
+    display: none;
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(11,18,32,0.92);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2.5rem;
+    height: 64px;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-left { display: flex; align-items: center; gap: 1rem; }
+  .nav-logo { height: 36px; }
+  .nav-badge {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.08em;
+    background: rgba(200,150,62,0.15);
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    padding: 0.25rem 0.75rem;
+    text-transform: uppercase;
+  }
+  .nav-links { display: flex; gap: 0.2rem; list-style: none; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; font-weight: 500;
+    padding: 0.45rem 0.85rem; border-radius: 8px;
+    transition: color 0.2s, background 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); background: rgba(255,255,255,0.06); }
+  .nav-cta {
+    background: var(--gold); color: #0b1220;
+    font-weight: 600; font-size: 0.85rem;
+    border: none; border-radius: 8px;
+    padding: 0.55rem 1.3rem; cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s;
+  }
+  .nav-cta:hover { background: var(--gold2); }
+
+  /* ── SECTIONS ── */
+  section { padding: 100px 0; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem; }
+
+  /* ── HERO ── */
+  #hero {
+    display: none;
+    min-height: 92vh;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background: radial-gradient(ellipse 80% 80% at 70% 50%, rgba(200,150,62,0.08) 0%, transparent 65%),
+                radial-gradient(ellipse 50% 70% at 10% 30%, rgba(26,37,64,0.9) 0%, transparent 60%),
+                var(--navy);
+  }
+  #hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c8963e' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 1200px; margin: 0 auto; padding: 0 2.5rem;
+    display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; min-height: 92vh; gap: 4rem;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--gold);
+    background: rgba(200,150,62,0.1);
+    border: 1px solid rgba(200,150,62,0.3);
+    border-radius: 30px; padding: 0.35rem 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .hero-tag::before { content: ''; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+  .hero-h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.6rem, 4.5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    color: var(--white);
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--gold);
+  }
+  .hero-sub {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 500px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+  .hero-btns { display: flex; gap: 1rem; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold);
+    color: #0b1220;
+    font-weight: 700; font-size: 0.9rem;
+    border: none; border-radius: 10px;
+    padding: 0.85rem 1.8rem; cursor: pointer;
+    text-decoration: none; transition: background 0.2s, transform 0.1s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary:hover { background: var(--gold2); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--white);
+    font-weight: 600; font-size: 0.9rem;
+    border: 1px solid rgba(255,255,255,0.2); border-radius: 10px;
+    padding: 0.85rem 1.8rem; cursor: pointer;
+    text-decoration: none; transition: border-color 0.2s, background 0.2s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-ghost:hover { border-color: var(--gold); color: var(--gold); }
+
+  /* Hero phone mockup */
+  .hero-phone {
+    display: flex; justify-content: center; align-items: center; position: relative;
+  }
+  .phone-frame {
+    width: 280px;
+    background: #1a2540;
+    border-radius: 36px;
+    border: 2px solid rgba(200,150,62,0.3);
+    overflow: hidden;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,150,62,0.1);
+    position: relative;
+  }
+  .phone-header {
+    background: var(--gold);
+    padding: 1.2rem 1.4rem 1rem;
+    color: #0b1220;
+  }
+  .phone-time { font-size: 0.72rem; font-weight: 600; display: flex; justify-content: space-between; margin-bottom: 0.8rem; }
+  .phone-welcome { font-size: 0.72rem; opacity: 0.7; }
+  .phone-brand { font-size: 1rem; font-weight: 700; letter-spacing: 0.04em; }
+  .phone-body { padding: 1.2rem 1.4rem; }
+  .phone-card {
+    background: rgba(200,150,62,0.08);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  .phone-label { font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.3rem; }
+  .phone-value { font-size: 1.4rem; font-weight: 700; color: var(--gold2); }
+  .phone-sub { font-size: 0.68rem; color: var(--muted); }
+  .phone-row { display: flex; align-items: center; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid var(--border); font-size: 0.75rem; }
+  .phone-row:last-child { border: none; }
+  .phone-row .icon { font-size: 0.85rem; margin-right: 0.4rem; }
+  .phone-row .badge { font-size: 0.65rem; background: rgba(200,150,62,0.15); color: var(--gold); border-radius: 4px; padding: 0.15rem 0.4rem; }
+  .phone-glow {
+    position: absolute; top: -60px; right: -80px;
+    width: 320px; height: 320px;
+    background: radial-gradient(circle, rgba(200,150,62,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--navy3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 2rem 0;
+  }
+  .stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; }
+  .stat-item {
+    text-align: center;
+    padding: 1rem 1.5rem;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem; line-height: 1.4; }
+
+  /* ── SECTION LABEL ── */
+  .sec-label {
+    font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .sec-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 3.5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+  }
+  .sec-subtitle {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ── DSG/ABOUT SECTION ── */
+  #dsg { background: var(--navy2); display: none; }
+  .timeline { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 1.5rem; margin-top: 3rem; }
+  .timeline-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+  }
+  .tl-year { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; color: var(--gold); margin-bottom: 0.4rem; }
+  .tl-text { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: start; }
+  .big-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.2rem; margin-top: 2.5rem; }
+  .big-stat { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem; }
+  .big-stat-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--gold); }
+  .big-stat-lbl { font-size: 0.8rem; color: var(--muted); margin-top: 0.3rem; }
+
+  /* ── WHY MVNOs ── */
+  #why { background: var(--navy); }
+  .dim-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+  .dim-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .dim-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .dim-icon { font-size: 1.4rem; margin-bottom: 0.8rem; }
+  .dim-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; color: var(--white); }
+  .dim-desc { font-size: 0.83rem; color: var(--muted); line-height: 1.55; }
+  .fallacy-box {
+    background: rgba(200,150,62,0.06);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    margin-top: 2.5rem;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  }
+  .fallacy-no li, .fallacy-yes li { list-style: none; padding: 0.4rem 0; font-size: 0.9rem; }
+  .fallacy-no li::before { content: '✗ '; color: #f87171; }
+  .fallacy-yes li::before { content: '✓ '; color: #4ade80; }
+  .fallacy-label { font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem; }
+  .quote-block {
+    background: var(--navy3);
+    border-left: 3px solid var(--gold);
+    padding: 1.5rem 2rem;
+    border-radius: 0 12px 12px 0;
+    margin-top: 2.5rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-style: italic;
+    color: var(--off-white);
+  }
+
+  /* ── CVP ── */
+  #cvp { background: var(--navy2); }
+  .cvp-pillars { display: grid; grid-template-columns: repeat(2,1fr); gap: 1.2rem; margin-top: 2.5rem; }
+  .cvp-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.8rem;
+    transition: border-color 0.2s;
+  }
+  .cvp-card:hover { border-color: rgba(200,150,62,0.5); }
+  .cvp-num { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: rgba(200,150,62,0.3); line-height: 1; margin-bottom: 0.8rem; }
+  .cvp-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+  .cvp-text { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .validation-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+  .validation-table th { text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+  .validation-table td { padding: 1rem; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
+  .validation-table td:first-child { color: var(--gold); font-weight: 600; }
+
+  /* ── VAS ── */
+  #vas { background: var(--navy); }
+  .vas-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+  .vas-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.6rem;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .vas-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .vas-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+  .vas-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .vas-desc { font-size: 0.82rem; color: var(--muted); line-height: 1.55; margin-bottom: 0.8rem; }
+  .vas-tags { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .tag { font-size: 0.68rem; font-weight: 600; background: rgba(200,150,62,0.1); color: var(--gold); border-radius: 4px; padding: 0.2rem 0.5rem; }
+  .global-table { width: 100%; border-collapse: collapse; margin-top: 2rem; }
+  .global-table th { text-align: left; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+  .global-table td { padding: 0.9rem 1rem; font-size: 0.88rem; border-bottom: 1px solid var(--border); }
+  .global-table td:first-child { font-weight: 600; }
+  .global-table tr:hover td { background: rgba(255,255,255,0.02); }
+
+  /* ── USE CASES ── */
+  #usecases { background: var(--navy2); }
+  .uc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px,1fr)); gap: 1.4rem; margin-top: 2.5rem; }
+  .uc-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.8rem;
+    transition: border-color 0.2s, transform 0.2s;
+    position: relative;
+  }
+  .uc-card:hover { border-color: rgba(200,150,62,0.5); transform: translateY(-2px); }
+  .uc-icon { font-size: 1.6rem; margin-bottom: 0.8rem; }
+  .uc-name { font-weight: 700; font-size: 1rem; margin-bottom: 0.6rem; }
+  .uc-diff { font-size: 0.8rem; color: var(--gold); font-weight: 600; margin-bottom: 0.6rem; padding-left: 0.8rem; border-left: 2px solid var(--gold); }
+  .uc-text { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+  .uc-outcome { font-size: 0.78rem; color: #4ade80; margin-top: 0.8rem; }
+  .uc-outcome::before { content: '✓ '; }
+
+  /* ── EVP ── */
+  #evp { background: var(--navy); }
+  .evp-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(280px,1fr)); gap: 1.2rem; margin-top: 2.5rem; }
+  .evp-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.6rem;
+    transition: border-color 0.2s;
+  }
+  .evp-card:hover { border-color: var(--gold); }
+  .evp-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: rgba(200,150,62,0.25); line-height: 1; margin-bottom: 0.6rem; }
+  .evp-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.4rem; }
+  .evp-text { font-size: 0.83rem; color: var(--muted); line-height: 1.6; }
+  .stakeholder-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.2rem; margin-top: 2.5rem; }
+  .sh-card { background: var(--navy3); border: 1px solid var(--border); border-radius: 16px; padding: 1.6rem; }
+  .sh-role { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gold); margin-bottom: 0.8rem; }
+  .sh-benefits li { list-style: none; font-size: 0.83rem; color: var(--muted); padding: 0.2rem 0; }
+  .sh-benefits li::before { content: '→ '; color: var(--gold); }
+
+  /* ── PACKAGES ── */
+  #packages { background: var(--navy2); }
+  .pkg-grid { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 1rem; margin-top: 2.5rem; }
+  .pkg-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.5rem; text-align: center;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pkg-card:hover { border-color: var(--gold); transform: translateY(-2px); }
+  .pkg-name { font-weight: 700; font-size: 0.95rem; margin-bottom: 0.4rem; }
+  .pkg-target { font-size: 0.75rem; color: var(--gold); margin-bottom: 0.6rem; }
+  .pkg-value { font-size: 0.8rem; color: var(--muted); }
+
+  /* ── METHODOLOGY ── */
+  #methodology { background: var(--navy); }
+  .phase-track { display: flex; align-items: stretch; gap: 0; margin-top: 3rem; overflow-x: auto; padding-bottom: 1rem; }
+  .phase { flex: 1; min-width: 160px; text-align: center; position: relative; }
+  .phase::after { content: '→'; position: absolute; right: -12px; top: 28px; color: var(--gold); font-size: 1.2rem; z-index: 1; }
+  .phase:last-child::after { display: none; }
+  .phase-dot {
+    width: 56px; height: 56px;
+    background: var(--navy3);
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 0.8rem;
+    font-size: 0.75rem; font-weight: 700; color: var(--gold);
+  }
+  .phase.active .phase-dot { background: var(--gold); color: #0b1220; border-color: var(--gold); }
+  .phase-label { font-size: 0.8rem; font-weight: 600; color: var(--white); }
+  .phase-sub { font-size: 0.7rem; color: var(--muted); margin-top: 0.2rem; }
+  .phase-gate { font-size: 0.65rem; background: rgba(200,150,62,0.1); color: var(--gold); border-radius: 4px; padding: 0.15rem 0.4rem; margin-top: 0.4rem; display: inline-block; }
+  .deliverables { display: grid; grid-template-columns: repeat(auto-fill,minmax(200px,1fr)); gap: 1rem; margin-top: 3rem; }
+  .deliv-card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 1.4rem; }
+  .deliv-code { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; color: var(--gold); margin-bottom: 0.4rem; }
+  .deliv-title { font-weight: 700; font-size: 0.88rem; margin-bottom: 0.3rem; }
+  .deliv-text { font-size: 0.78rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── PRICING ── */
+  #pricing { background: var(--navy2); }
+  .pricing-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin-top: 2.5rem; }
+  .pricing-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 2rem; position: relative;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+  .pricing-card.featured { border-color: var(--gold); }
+  .pricing-card.featured::before {
+    content: 'Recommended';
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: #0b1220;
+    font-size: 0.7rem; font-weight: 700; border-radius: 20px; padding: 0.3rem 0.8rem;
+    letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .pricing-card:hover { transform: translateY(-3px); }
+  .price-plan { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 0.6rem; }
+  .price-main { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--gold); margin-bottom: 0.2rem; }
+  .price-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 1.5rem; }
+  .price-features { list-style: none; }
+  .price-features li { font-size: 0.85rem; color: var(--muted); padding: 0.4rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 0.5rem; }
+  .price-features li::before { content: '✓'; color: var(--gold); font-weight: 700; flex-shrink: 0; }
+  .price-features li.no::before { content: '—'; color: var(--muted); }
+  .price-features li.no { opacity: 0.6; }
+
+  /* ── CTA SECTION ── */
+  #contact { background: var(--navy3); text-align: center; }
+  #contact .sec-title { text-align: center; margin: 0 auto 1rem; }
+  #contact .sec-subtitle { text-align: center; margin: 0 auto 2.5rem; }
+
+  /* ── FOOTER ── */
+  footer {
+    display: none;
+    background: #070d18;
+    border-top: 1px solid var(--border);
+    padding: 3.5rem 0 2.5rem;
+  }
+  .footer-inner { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 3rem; padding-bottom: 2.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+  .footer-brand img { height: 36px; margin-bottom: 1rem; }
+  .footer-brand p { font-size: 0.83rem; color: var(--muted); line-height: 1.6; max-width: 280px; }
+  .footer-col h4 { font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; }
+  .footer-col a { display: block; font-size: 0.85rem; color: rgba(255,255,255,0.6); text-decoration: none; padding: 0.25rem 0; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--gold); }
+  .footer-bottom { display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-size: 0.78rem; color: var(--muted); }
+  .footer-dsg { font-size: 0.78rem; color: var(--muted); }
+  .footer-dsg span { color: var(--gold); }
+
+  /* ── UTILITY ── */
+  .divider { width: 48px; height: 3px; background: var(--gold); border-radius: 2px; margin-bottom: 1.5rem; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .highlight { color: var(--gold); }
+
+
+  /* Initially hide main content — revealed by JS after unlock */
+  #mainnav, #hero, #maindivider, #dsg,
+  section:not(#hero):not(#dsg), footer {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; text-align: center; }
+    .hero-phone { display: none; }
+    .stats-grid { grid-template-columns: repeat(2,1fr); }
+    .about-grid, .two-col { grid-template-columns: 1fr; }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .stakeholder-grid { grid-template-columns: 1fr; }
+    .cvp-pillars { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+    .fallacy-box { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════ LOCKSCREEN ═══════════════════════ -->
+<div id="lockscreen">
+  <img class="lock-logo" src="data:image/png;base64,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" alt="NMB Bank" onerror="this.style.display='none'">
+  <div class="lock-box">
+    <div class="lock-icon">🔒</div>
+    <h2>Access Document</h2>
+    <p>This document is confidential and for authorised recipients only.<br>Enter your NMB access credentials to continue.</p>
+    <input type="text" id="lockUser" placeholder="Username" autocomplete="off" />
+    <input type="password" id="lockPass" placeholder="Password" autocomplete="off" />
+    <button onclick="checkLock()">Access Document →</button>
+    <div id="lockError">Incorrect credentials. Please try again.</div>
+  </div>
+  <div class="lock-footer">
+    <span>🔒</span> This document is password protected · Confidential · DSG / Broadbrand © 2026
+  </div>
+</div>
+
+<!-- ═══════════════════════ NAV ═══════════════════════ -->
+<nav id="mainnav">
+  <div class="nav-left">
+    <img class="nav-logo" src="data:image/png;base64,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" alt="NMB Bank" onerror="this.style.display='none'">
+    <span class="nav-badge">MVNO 2026</span>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#why">Why MVNOs</a></li>
+    <li><a href="#cvp">CVP</a></li>
+    <li><a href="#vas">VAS</a></li>
+    <li><a href="#usecases">Use Cases</a></li>
+    <li><a href="#evp">EVP</a></li>
+    <li><a href="#pricing">Models</a></li>
+    <li><a href="#methodology">Methodology</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Get in touch</a>
+</nav>
+
+<!-- ═══════════════════════ HERO ═══════════════════════ -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">Workshop · 21 April 2026 · Tanzania</div>
+      <h1 class="hero-h1">A banking-led MVNO <em>built around</em> the NMB customer.</h1>
+      <p class="hero-sub">The NMB Digital Mobile Platform — turning everyday connectivity into transaction rewards, financial inclusion, and national-scale banking ecosystem growth. Not a telecom product. A national engagement engine.</p>
+      <div class="hero-btns">
+        <a href="#usecases" class="btn-primary">Explore Use Cases →</a>
+        <a href="#pricing" class="btn-ghost">View Pricing Models</a>
+      </div>
+      <div style="display:flex;gap:2rem;margin-top:2.5rem;flex-wrap:wrap;">
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);">20–40%</div><div style="font-size:0.78rem;color:var(--muted);">ARPU increase via layered VAS</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);">3×</div><div style="font-size:0.78rem;color:var(--muted);">Higher LTV with bundled VAS</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);">11</div><div style="font-size:0.78rem;color:var(--muted);">Differentiated NMB use cases</div></div>
+        <div><div style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--gold);">71%</div><div style="font-size:0.78rem;color:var(--muted);">More loyal via personalisation</div></div>
+      </div>
+    </div>
+    <div class="hero-phone">
+      <div class="phone-glow"></div>
+      <div class="phone-frame">
+        <div class="phone-header">
+          <div class="phone-time"><span>9:41</span><span>▲▲ ⬛</span></div>
+          <div class="phone-welcome">Welcome back</div>
+          <div class="phone-brand">NMB DIGITAL CONNECT</div>
+        </div>
+        <div class="phone-body">
+          <div class="phone-card">
+            <div class="phone-label">Mobile Balance</div>
+            <div class="phone-value">3.8 GB</div>
+            <div class="phone-sub">of 5 GB · NMB Salary Connect</div>
+          </div>
+          <div class="phone-row"><span><span class="icon">💳</span>Banking rewards</span><span class="badge">+520 MB</span></div>
+          <div class="phone-row"><span><span class="icon">📊</span>Transactions this month</span><span class="badge">34 digital</span></div>
+          <div class="phone-row"><span><span class="icon">✓</span>Zero-rated banking app</span><span class="badge">Active</span></div>
+          <div class="phone-row"><span><span class="icon">🔒</span>Cybersecurity</span><span class="badge">Protected</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div id="maindivider" style="display:none;">
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-item"><div class="stat-num">40%+</div><div class="stat-label">Churn common without great CX — MVNO Nation Study</div></div>
+        <div class="stat-item"><div class="stat-num">20–40%</div><div class="stat-label">ARPU increase through layered VAS</div></div>
+        <div class="stat-item"><div class="stat-num">3×</div><div class="stat-label">Higher LTV per user with bundled VAS</div></div>
+        <div class="stat-item"><div class="stat-num">71%</div><div class="stat-label">More likely to report loyalty via personalisation — Zendesk</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════ DSG ABOUT ═══════════════════════ -->
+<section id="dsg">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="sec-label">About Broadbrand / DSG</div>
+        <div class="divider"></div>
+        <h2 class="sec-title">25+ years building Africa's telco future</h2>
+        <p class="sec-subtitle">From founding in 1998 to launching Africa's leading MVNE platform, DSG and Broadbrand bring deep operational expertise, award-winning CX capability, and proven MVNO success across the continent.</p>
+        <div class="big-stats">
+          <div class="big-stat"><div class="big-stat-num">1,000+</div><div class="big-stat-lbl">Contact centre seats, JHB & Cape Town</div></div>
+          <div class="big-stat"><div class="big-stat-num">6</div><div class="big-stat-lbl">Office locations across Africa & Seychelles</div></div>
+          <div class="big-stat"><div class="big-stat-num">10+</div><div class="big-stat-lbl">Industry sectors served</div></div>
+          <div class="big-stat"><div class="big-stat-num">25+</div><div class="big-stat-lbl">Years of telco & CX expertise</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="timeline">
+          <div class="timeline-item"><div class="tl-year">1998</div><div class="tl-text">Founded — CXG, UPay, UFreight, DigitalMall established</div></div>
+          <div class="timeline-item"><div class="tl-year">2006–2008</div><div class="tl-text">Cell One Namibia (GSM) · Sasatel Tanzania (CDMA) · Broadband Company Uganda (WiMAX)</div></div>
+          <div class="timeline-item"><div class="tl-year">2012</div><div class="tl-text">Broadbrand launched</div></div>
+          <div class="timeline-item"><div class="tl-year">2013</div><div class="tl-text">MVNE — Mobile Virtual Network Enabler launched</div></div>
+          <div class="timeline-item"><div class="tl-year">2018</div><div class="tl-text">Digital Resilience launched</div></div>
+          <div class="timeline-item"><div class="tl-year">2024</div><div class="tl-text">eInsurer — Cyber Insurance launched</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ WHY MVNOs ═══════════════════════ -->
+<section id="why">
+  <div class="container">
+    <div class="sec-label">Strategic Context</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">MVNOs are no longer side projects.<br>They are strategic digital brands.</h2>
+    <p class="sec-subtitle">Success requires more than network access or a clever app. It takes alignment across five dimensions — and NMB is uniquely positioned to execute on all five.</p>
+    <div class="dim-grid">
+      <div class="dim-card"><div class="dim-icon">📡</div><div class="dim-name">CVP</div><div class="dim-desc">A value proposition that resonates deeply with your target audience. Not connectivity — relevance.</div></div>
+      <div class="dim-card"><div class="dim-icon">📊</div><div class="dim-name">Marketing</div><div class="dim-desc">Scalable, data-driven customer acquisition and retention. AI-powered campaigns that scale.</div></div>
+      <div class="dim-card"><div class="dim-icon">💎</div><div class="dim-name">Customer Value</div><div class="dim-desc">Maximise ARPU, engagement, and brand lifetime value through smart segmentation and CVM.</div></div>
+      <div class="dim-card"><div class="dim-icon">✨</div><div class="dim-name">Customer Experience</div><div class="dim-desc">Frictionless, digital-first and emotionally intelligent — from onboarding to loyalty journeys.</div></div>
+      <div class="dim-card"><div class="dim-icon">🔗</div><div class="dim-name">VAS</div><div class="dim-desc">Smart service bundling that unlocks loyalty and margin. Every service is a reason to stay.</div></div>
+    </div>
+    <div class="fallacy-box">
+      <div>
+        <div class="fallacy-label">❌ The MVNO Fallacy</div>
+        <ul class="fallacy-no">
+          <li>NOT just about tech</li>
+          <li>NOT about copying the MNO</li>
+          <li>NOT enough to launch with low prices</li>
+        </ul>
+      </div>
+      <div>
+        <div class="fallacy-label">✅ It's about building a business</div>
+        <ul class="fallacy-yes">
+          <li>Own brand logic and identity</li>
+          <li>Own customer segments</li>
+          <li>Own economics and margin model</li>
+        </ul>
+      </div>
+    </div>
+    <div class="quote-block">"MVNOs don't compete on price. They win on value." — #DoingSomethingGreat</div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CVP ═══════════════════════ -->
+<section id="cvp">
+  <div class="container">
+    <div class="sec-label">Customer Value Proposition</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">Great CVPs don't just sell connectivity.<br>They sell relevance.</h2>
+    <p class="sec-subtitle">The CVP is NMB's strategic weapon. It must align with brand equity, how customers transact, and Tanzania's unmet digital banking needs.</p>
+    <div class="quote-block" style="margin-bottom:2.5rem;">"AN MVNO IS A DIGITAL DELIVERY PLATFORM OFFERING UNPRECEDENTED VALUE, ANALYTICS &amp; ENGAGEMENT"</div>
+    <div class="cvp-pillars">
+      <div class="cvp-card"><div class="cvp-num">01</div><div class="cvp-title">High Perceived Value, Low Comparative Cost</div><div class="cvp-text">2GB data retail value R160/pm vs R39 actual cost — an extraordinary rewards mechanism for digital banking behaviour.</div></div>
+      <div class="cvp-card"><div class="cvp-num">02</div><div class="cvp-title">Passive Behavioural Data Collection</div><div class="cvp-text">The SIM becomes a data asset enabling one-to-one personalised marketing and smarter financial product decisions.</div></div>
+      <div class="cvp-card"><div class="cvp-num">03</div><div class="cvp-title">Greater Customer Entanglement</div><div class="cvp-text">Deep daily integration into banking behaviour reduces churn and dramatically increases transaction frequency and lifetime value.</div></div>
+      <div class="cvp-card"><div class="cvp-num">04</div><div class="cvp-title">National Financial Ecosystem Growth</div><div class="cvp-text">A vehicle to stimulate financial inclusion, agent network performance, merchant adoption, and national-scale banking participation.</div></div>
+    </div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin:3rem 0 1rem;">CVP Validation Framework</h3>
+    <table class="validation-table">
+      <thead><tr><th>Dimension</th><th>Validation Question</th></tr></thead>
+      <tbody>
+        <tr><td>Offering</td><td>Is the offering differentiated — not just cheaper?</td></tr>
+        <tr><td>Value</td><td>Can we prove value through case studies or trials?</td></tr>
+        <tr><td>Alignment</td><td>Are we aligned with target segment expectations?</td></tr>
+        <tr><td>Goals</td><td>Does the CVP support long-term brand and margin goals?</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════ VAS ═══════════════════════ -->
+<section id="vas">
+  <div class="container">
+    <div class="sec-label">Value-Added Services</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">VAS = Revenue + Differentiation + Retention</h2>
+    <p class="sec-subtitle">MVNOs win when they monetise beyond connectivity. A single VAS can be the reason a subscriber stays — or leaves. NMB has the ecosystem to stack unique VAS no pure telco can replicate.</p>
+    <div class="vas-grid">
+      <div class="vas-card"><div class="vas-icon">🏦</div><div class="vas-name">Mobile Financial Services</div><div class="vas-desc">Wallets, loans, insurance, payments. The natural extension of NMB's banking infrastructure into mobile.</div><div class="vas-tags"><span class="tag">Revenue</span><span class="tag">Stickiness</span></div></div>
+      <div class="vas-card"><div class="vas-icon">🔒</div><div class="vas-name">Cybersecurity & Parental Controls</div><div class="vas-desc">Bitdefender #1 ranked protection, Africa exclusive via Digital Resilience. Antivirus, VPN, parental controls.</div><div class="vas-tags"><span class="tag">Revenue</span><span class="tag">Stickiness</span></div></div>
+      <div class="vas-card"><div class="vas-icon">🛡️</div><div class="vas-name">Personal Cyber Insurance</div><div class="vas-desc">eInsurer — theft of funds, ID theft, cyberbullying, ransomware. Three tiers: MEGA, GIGA, TERA.</div><div class="vas-tags"><span class="tag">Revenue</span><span class="tag">High Margin</span></div></div>
+      <div class="vas-card"><div class="vas-icon">🚗</div><div class="vas-name">Driver Safety & Telematics</div><div class="vas-desc">Sentiance on-device AI — driving scores, crash detection, lifestyle insights. Used by Uber, Absa, State Farm.</div><div class="vas-tags"><span class="tag">Revenue</span><span class="tag">Differentiation</span></div></div>
+      <div class="vas-card"><div class="vas-icon">📶</div><div class="vas-name">eSIM & Roaming Packs</div><div class="vas-desc">Dual eSIM for local + global coverage. Essential for cross-border traders and remittance customers across Africa.</div><div class="vas-tags"><span class="tag">Revenue</span><span class="tag">Cross-border</span></div></div>
+      <div class="vas-card"><div class="vas-icon">🎮</div><div class="vas-name">Loyalty & Cashback</div><div class="vas-desc">Gamified rewards — points, streaks, levels. Powered by Xanite's real-time campaign engine.</div><div class="vas-tags"><span class="tag">Retention</span><span class="tag">Stickiness</span></div></div>
+      <div class="vas-card"><div class="vas-icon">❤️</div><div class="vas-name">Health & Wellness</div><div class="vas-desc">Telehealth, fitness, mental wellbeing — turning the SIM into a daily health companion for NMB customers.</div><div class="vas-tags"><span class="tag">Retention</span><span class="tag">Stickiness</span></div></div>
+      <div class="vas-card"><div class="vas-icon">🏢</div><div class="vas-name">SME Tools</div><div class="vas-desc">Email, CRM, invoicing — a business productivity suite for merchants and SMEs using NMB rails.</div><div class="vas-tags"><span class="tag">Revenue</span><span class="tag">High Margin</span></div></div>
+    </div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;margin:3rem 0 1rem;">Global VAS Benchmarks</h3>
+    <table class="global-table">
+      <thead><tr><th>Operator</th><th>Country</th><th>VAS Strategy</th></tr></thead>
+      <tbody>
+        <tr><td>M-Pesa</td><td>Kenya</td><td>$900M+ revenue from nano-loans and mobile wallets</td></tr>
+        <tr><td>Jio</td><td>India</td><td>Bundles OTT (Disney+, Netflix, JioCinema) to boost retention</td></tr>
+        <tr><td>DStv Internet</td><td>SA/Africa</td><td>Bundles satellite TV and LTE connectivity</td></tr>
+        <tr><td>Telkomsel</td><td>Indonesia</td><td>Health platform bundled with SIMs</td></tr>
+        <tr><td>Verizon Cloud</td><td>USA</td><td>Monetises peace-of-mind with paid backups</td></tr>
+        <tr><td>Tesco Mobile</td><td>UK</td><td>Ties loyalty points to top-ups, drives retail synergy</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════════════════ USE CASES ═══════════════════════ -->
+<section id="usecases">
+  <div class="container">
+    <div class="sec-label">NMB Use Cases</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">A unique value proposition for NMB Bank</h2>
+    <p class="sec-subtitle">"Your Bank. Your Network. Your Everyday Empowerment." — NMB positioned not as a telecom provider, but as the NMB National Financial Engagement Engine.</p>
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-icon">🏦</div>
+        <div class="uc-name">NMB Mass Marketing Banking SIM</div>
+        <div class="uc-diff">Scale activation across millions of customers</div>
+        <div class="uc-text">A default SIM/eSIM embedded into NMB onboarding to drive daily banking interaction at national scale. Zero-rated banking (USSD + app), airtime/data rewards linked to account activity, SIM issued at account opening.</div>
+        <div class="uc-outcome">Mass digital adoption · Always-on engagement · Reduced cost-to-serve</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">💰</div>
+        <div class="uc-name">Salary & Government Employee Platform</div>
+        <div class="uc-diff">Guaranteed ARPU base, not just a value-add</div>
+        <div class="uc-text">MVNO bundled into salary accounts and government payroll segments. Monthly airtime/data linked to salary inflows, tiered connectivity benefits based on income, bundled financial + connectivity packages.</div>
+        <div class="uc-outcome">High retention · Predictable recurring revenue · Increased primary bank usage</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">⚡</div>
+        <div class="uc-name">National Transaction Engine</div>
+        <div class="uc-diff">NMB amplifies transactions at national volume</div>
+        <div class="uc-text">MVNO used to drive high-frequency, everyday transactions at scale. Rewards for bill payments, transfers, airtime purchases. Incentives for digital over cash. Micro-rewards for consistent usage.</div>
+        <div class="uc-outcome">Increased transaction volumes · Reduced dependency on cash</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🤝</div>
+        <div class="uc-name">Agent Network as Dual Infrastructure</div>
+        <div class="uc-diff">NMB becomes last-mile infrastructure, not just a bank</div>
+        <div class="uc-text">Transform NMB's agent network into a dual banking + telecom distribution layer. SIM registration via agents, real-time transaction connectivity, rural connectivity enablement.</div>
+        <div class="uc-outcome">Expanded reach into underserved markets · Faster customer acquisition</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🏪</div>
+        <div class="uc-name">Merchant & Payments Scale Platform</div>
+        <div class="uc-diff">NMB becomes a payments growth engine at scale</div>
+        <div class="uc-text">Connectivity embedded into NMB's merchant and payment ecosystem. Merchant SIMs for POS and mobile payments, real-time transaction alerts, connectivity-linked incentives for digital payments.</div>
+        <div class="uc-outcome">NMB becomes merchant growth partner, not just a bank</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">📈</div>
+        <div class="uc-name">Lending & Repayment Optimisation Engine</div>
+        <div class="uc-diff">Behaviour-linked credit insights and incentives</div>
+        <div class="uc-text">Drive loan performance and repayment behaviour through incentives. Data rewards for on-time repayments, incentives tied to loan milestones, behaviour-linked credit insights.</div>
+        <div class="uc-outcome">Improved repayment rates · Reduced default risk · Increased lending scalability</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">👛</div>
+        <div class="uc-name">High-Frequency Consumer Spend Layer</div>
+        <div class="uc-diff">MVNO at the centre of daily spend behaviour</div>
+        <div class="uc-text">Rewards for airtime, utilities, and everyday payments. Integration with wallet and payment services. Incentives for consistent usage patterns to drive continuous engagement.</div>
+        <div class="uc-outcome">Increased wallet activity · Higher customer lifetime value</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🎓</div>
+        <div class="uc-name">Youth & Mass Market Digital Adoption</div>
+        <div class="uc-diff">Rapid customer acquisition at scale</div>
+        <div class="uc-text">Drive adoption across younger and mobile-first segments. Data bundles linked to account activity, incentives for app usage and savings, zero-rated digital onboarding.</div>
+        <div class="uc-outcome">Rapid customer acquisition · Long-term lifecycle growth</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">🏢</div>
+        <div class="uc-name">SME Volume Enablement</div>
+        <div class="uc-diff">NMB supports SME scale and throughput</div>
+        <div class="uc-text">Connectivity for SMEs focused on transaction volume. Business SIM plans, payment and transaction connectivity, high-frequency transaction incentives for growth.</div>
+        <div class="uc-outcome">NMB supports SME scale and throughput, not just advisory</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-icon">⭐</div>
+        <div class="uc-name">National Loyalty & Retention Engine</div>
+        <div class="uc-diff">Stronger national brand stickiness</div>
+        <div class="uc-text">MVNO becomes a mass-scale loyalty layer. Tiered rewards based on transaction volume, monthly connectivity benefits, long-term engagement incentives across Tanzania.</div>
+        <div class="uc-outcome">Reduced churn · Increased lifetime value · Ecosystem lock-in</div>
+      </div>
+      <div class="uc-card" style="border-color:rgba(200,150,62,0.4);">
+        <div class="uc-icon">🚀</div>
+        <div class="uc-name">NMB Digital Banking Ecosystem — Future State</div>
+        <div class="uc-diff">NMB evolves from bank to digital ecosystem enabler</div>
+        <div class="uc-text">MVNO as the backbone of a fully integrated digital banking ecosystem. Customer behaviour analytics, personalised financial product recommendations, digital marketplace integrations.</div>
+        <div class="uc-outcome">NMB evolves from traditional banking to digital financial ecosystem enabler</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ EVP ═══════════════════════ -->
+<section id="evp">
+  <div class="container">
+    <div class="sec-label">Employee Value Proposition</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">Not just an MVNO.<br>An Employee Engagement Platform.</h2>
+    <p class="sec-subtitle">Mobile data becomes a reward, a benefit, and a loyalty currency. NMB can deploy a unified employee super app that transforms workforce engagement and reduces cost of living.</p>
+    <div class="evp-grid">
+      <div class="evp-card"><div class="evp-num">1</div><div class="evp-title">Reduce Cost of Living</div><div class="evp-text">Value data, voice, family SIMs, device finance, eSIM travel benefits + built-in cybersecurity protection.</div></div>
+      <div class="evp-card"><div class="evp-num">2</div><div class="evp-title">Reward the Right Behaviour</div><div class="evp-text">Earn data for performance, training, wellness, surveys, referrals. High value, low real cost — a powerful incentive mechanism.</div></div>
+      <div class="evp-card"><div class="evp-num">3</div><div class="evp-title">Unified Super App</div><div class="evp-text">HR self-service, payslips, comms, zero-rated intranet, wellness, gamification leaderboards, learning modules, identity verification.</div></div>
+      <div class="evp-card"><div class="evp-num">4</div><div class="evp-title">Safer Workforce</div><div class="evp-text">Bitdefender built-in: device protection, identity monitoring, phishing awareness, secure authentication, optional family bundles.</div></div>
+      <div class="evp-card"><div class="evp-num">5</div><div class="evp-title">Workforce Intelligence</div><div class="evp-text">POPIA-compliant behavioural insights, engagement heatmaps, campaign ROI tracking, churn prediction, location-aware alerts.</div></div>
+    </div>
+    <div class="stakeholder-grid">
+      <div class="sh-card">
+        <div class="sh-role">👥 For HR</div>
+        <ul class="sh-benefits">
+          <li>Improved engagement</li>
+          <li>Measurable participation</li>
+          <li>Lower turnover</li>
+          <li>Digital workforce enablement</li>
+        </ul>
+      </div>
+      <div class="sh-card">
+        <div class="sh-role">💼 For CFO</div>
+        <ul class="sh-benefits">
+          <li>Low CapEx model</li>
+          <li>Predictable OpEx</li>
+          <li>Revenue share potential</li>
+          <li>Lower cost-to-serve via digital</li>
+        </ul>
+      </div>
+      <div class="sh-card">
+        <div class="sh-role">🎯 For CEO</div>
+        <ul class="sh-benefits">
+          <li>Defensive digital positioning</li>
+          <li>Data ownership</li>
+          <li>Workforce loyalty moat</li>
+          <li>Platform expansion capability</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PACKAGES ═══════════════════════ -->
+<section id="packages" style="background:var(--navy2);padding:80px 0;">
+  <div class="container">
+    <div class="sec-label">Example MVNO Packages</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">Branded packages for every NMB segment</h2>
+    <div class="pkg-grid">
+      <div class="pkg-card"><div style="font-size:1.4rem;margin-bottom:0.8rem;">🏧</div><div class="pkg-name">NMB Everyday Connect</div><div class="pkg-target">Retail mass market</div><div class="pkg-value">Daily transaction incentives</div></div>
+      <div class="pkg-card"><div style="font-size:1.4rem;margin-bottom:0.8rem;">💳</div><div class="pkg-name">NMB Salary Connect</div><div class="pkg-target">Employees</div><div class="pkg-value">Salary-linked connectivity</div></div>
+      <div class="pkg-card"><div style="font-size:1.4rem;margin-bottom:0.8rem;">🤝</div><div class="pkg-name">NMB Agent Connect</div><div class="pkg-target">Agents</div><div class="pkg-value">Distribution + infrastructure</div></div>
+      <div class="pkg-card"><div style="font-size:1.4rem;margin-bottom:0.8rem;">🏪</div><div class="pkg-name">NMB Merchant Connect</div><div class="pkg-target">Businesses</div><div class="pkg-value">Payments + connectivity</div></div>
+      <div class="pkg-card"><div style="font-size:1.4rem;margin-bottom:0.8rem;">🎓</div><div class="pkg-name">NMB Youth Connect</div><div class="pkg-target">Younger customers</div><div class="pkg-value">Digital adoption platform</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ METHODOLOGY ═══════════════════════ -->
+<section id="methodology">
+  <div class="container">
+    <div class="sec-label">Project Methodology</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">From viability to full commercial launch in 10 months</h2>
+    <p class="sec-subtitle">MVNE follows a structured engagement model with clear decision gates — combining NMB's own business intelligence with telecommunications models to deliver a bankable 60-month business plan.</p>
+    <div class="phase-track">
+      <div class="phase"><div class="phase-dot">M1–M3</div><div class="phase-label">Commercial Viability</div><div class="phase-sub">Phase</div><div class="phase-gate">Board Approval</div></div>
+      <div class="phase"><div class="phase-dot">M4</div><div class="phase-label">Implementation</div><div class="phase-sub">Scoping</div></div>
+      <div class="phase"><div class="phase-dot">M4–M7</div><div class="phase-label">Build, Integrate</div><div class="phase-sub">&amp; Test</div><div class="phase-gate">EXCO Approval</div></div>
+      <div class="phase"><div class="phase-dot">M8–M9</div><div class="phase-label">Soft Launch</div><div class="phase-sub"></div><div class="phase-gate">Board Approval</div></div>
+      <div class="phase active"><div class="phase-dot">M10 ⭐</div><div class="phase-label">Full Commercial</div><div class="phase-sub">Launch</div></div>
+    </div>
+    <div class="deliverables">
+      <div class="deliv-card"><div class="deliv-code">MVP</div><div class="deliv-title">Minimum Viable Launch Proposition</div><div class="deliv-text">Packages, deals and specific products forming the launch proposition</div></div>
+      <div class="deliv-card"><div class="deliv-code">OM</div><div class="deliv-title">Operating Model</div><div class="deliv-text">High-level Technical Architecture &amp; relational diagram between parties</div></div>
+      <div class="deliv-card"><div class="deliv-code">GTMP</div><div class="deliv-title">Go-to-Market Plan</div><div class="deliv-text">Sales, Distribution, Customer Care and Subscriber Lifecycle Management</div></div>
+      <div class="deliv-card"><div class="deliv-code">ICX</div><div class="deliv-title">Integrated Customer Experience</div><div class="deliv-text">Customer Journeys and high-level business processes</div></div>
+      <div class="deliv-card"><div class="deliv-code">BM</div><div class="deliv-title">60-Month Business Plan</div><div class="deliv-text">Granular commercial viability analysis with full sensitivity analysis</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ PRICING ═══════════════════════ -->
+<section id="pricing">
+  <div class="container">
+    <div class="sec-label">Engagement Models</div>
+    <div class="divider"></div>
+    <h2 class="sec-title">Three paths to launch NMB Mobile</h2>
+    <p class="sec-subtitle">Choose the model that fits NMB's timeline, investment appetite, and brand requirements. Charged at whichever is higher — monthly minimum or per-subscriber cost.</p>
+    <div class="pricing-grid">
+      <div class="pricing-card featured">
+        <div class="price-plan">Option 1 — Full MVNO</div>
+        <div class="price-main">R2.7M</div>
+        <div class="price-sub">build cost · Brand new MVNO · 6 months to launch</div>
+        <ul class="price-features">
+          <li>R400,000/month minimum</li>
+          <li>R12 per subscriber/month</li>
+          <li>Your own network name</li>
+          <li>Fully branded SIM card</li>
+          <li>Complete operational control</li>
+          <li>Full OSS / BSS / PCRF / OCS / iPaaS</li>
+          <li class="no">HLR not included</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="price-plan">Option 2 — Digital Mobile Partnership</div>
+        <div class="price-main">R250K</div>
+        <div class="price-sub">build cost · 2 months to launch · fastest path to market</div>
+        <ul class="price-features">
+          <li>R75,000/month minimum</li>
+          <li>R7.50 per subscriber/month</li>
+          <li>Digital Mobile network</li>
+          <li>Branded or Digital Mobile SIM</li>
+          <li>VAS pre-integrated from day one</li>
+          <li>Full OSS / BSS / PCRF / OCS / iPaaS</li>
+          <li class="no">HLR not included</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="price-plan">Option 3 — Technology Only</div>
+        <div class="price-main">TBD</div>
+        <div class="price-sub">solution dependent · Brand new MVNO · 6 months to launch</div>
+        <ul class="price-features">
+          <li>R200–400K/month minimum</li>
+          <li>R4.50–R12 per subscriber/month</li>
+          <li>Solution dependent branding</li>
+          <li>Modular OSS/BSS/PCRF optional</li>
+          <li>Technology ownership</li>
+          <li>CVM optional add-on</li>
+          <li class="no">HLR not included</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════ CTA ═══════════════════════ -->
+<section id="contact">
+  <div class="container">
+    <div class="sec-label" style="text-align:center;">Ready to build NMB Mobile?</div>
+    <div class="divider" style="margin:1rem auto 1.5rem;"></div>
+    <h2 class="sec-title" style="text-align:center;max-width:680px;margin:0 auto 1rem;">Let's start the commercial viability phase.</h2>
+    <p class="sec-subtitle" style="text-align:center;">The NMB banking ecosystem is already built. The MVNO layer turns it into a transaction-driven growth engine that extends reach, drives volume, and creates recurring revenue tied to financial activity.</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+      <a href="mailto:support@dsg.co.za" class="btn-primary">Contact DSG / Broadbrand →</a>
+      <a href="#methodology" class="btn-ghost">View Methodology</a>
+    </div>
+    <p style="color:var(--muted);font-size:0.8rem;margin-top:2.5rem;text-align:center;">A DSG / Broadbrand initiative in partnership with MTN.<br>Workshop — 21 April 2026, Tanzania. #DoingSomethingGreat</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════ FOOTER ═══════════════════════ -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <img src="data:image/png;base64,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" alt="NMB Bank" onerror="this.style.display='none'">
+        <p>The NMB Digital Mobile Platform — turning everyday connectivity into tangible financial value across Tanzania's banking landscape.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Sections</h4>
+        <a href="#why">Why MVNOs</a>
+        <a href="#cvp">CVP</a>
+        <a href="#vas">VAS</a>
+        <a href="#usecases">NMB Use Cases</a>
+        <a href="#evp">EVP</a>
+        <a href="#pricing">Engagement Models</a>
+        <a href="#methodology">Methodology</a>
+      </div>
+      <div class="footer-col">
+        <h4>Partners</h4>
+        <a href="#">Bitdefender / Digital Resilience</a>
+        <a href="#">eInsurer</a>
+        <a href="#">Sentiance</a>
+        <a href="#">Digital Mobile</a>
+        <a href="#">Xanite CVM</a>
+        <a href="#">MTN (MNO)</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:support@dsg.co.za">support@dsg.co.za</a>
+        <a href="tel:+27117597000">+2711 759 7000</a>
+        <a href="https://dsg.co.za" target="_blank">dsg.co.za</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-copy">© 2026 DSG Digital Solutions Group. Confidential — All rights reserved.</div>
+      <div class="footer-dsg">NMB Bank MVNO Workshop · 21 April 2026 <span>#DoingSomethingGreat</span></div>
+    </div>
+  </div>
+</footer>
+
+<script>
+function checkLock() {
+  var u = document.getElementById('lockUser').value.trim();
+  var p = document.getElementById('lockPass').value.trim();
+  if (u === 'nmb' && p === 'NMBConnect2026') {
+    document.getElementById('lockscreen').style.display = 'none';
+    document.getElementById('mainnav').style.display = 'flex';
+    document.getElementById('hero').style.display = 'block';
+    document.getElementById('maindivider').style.display = 'block';
+    document.getElementById('dsg').style.display = 'block';
+    document.querySelectorAll('section:not(#hero):not(#dsg)').forEach(function(s){
+      s.style.display = 'block';
+    });
+    document.querySelector('footer').style.display = 'block';
+  } else {
+    document.getElementById('lockError').style.display = 'block';
+    document.getElementById('lockPass').value = '';
+    document.getElementById('lockPass').focus();
+  }
+}
+document.addEventListener('keydown', function(e){
+  if(e.key==='Enter') checkLock();
+});
+</script>
+</body>
+</html>
